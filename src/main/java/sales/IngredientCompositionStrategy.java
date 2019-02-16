@@ -1,0 +1,54 @@
+package sales;
+
+import lombok.Getter;
+import model.Discount;
+import model.OrderItem;
+
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+
+public class IngredientCompositionStrategy implements SaleStrategy {
+
+    @Getter
+    private final String name;
+
+    @Getter
+    private final double percentage;
+
+    @Getter
+    private final Set<String> shouldHave;
+
+    @Getter
+    private final Set<String> shouldNotHave;
+
+    private Predicate<OrderItem> containsAllRequiredIngredients;
+    private Predicate<OrderItem> doesnContainsSomeIngredients;
+    private Predicate<OrderItem> shouldApplyLightSale;
+
+    public IngredientCompositionStrategy(String name, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
+        this.name = name;
+        this.percentage = percentage;
+        this.shouldHave = shouldHave;
+        this.shouldNotHave = shouldNotHave;
+        this.containsAllRequiredIngredients = item ->
+                item.getIngredients()
+                        .stream()
+                        .anyMatch(shouldHave::contains) || (!shouldHave.isEmpty() || !shouldNotHave.isEmpty());
+        this.doesnContainsSomeIngredients = item ->
+                item.getIngredients()
+                        .stream()
+                        .noneMatch(shouldNotHave::contains);
+        this.shouldApplyLightSale = item ->
+                containsAllRequiredIngredients.and(doesnContainsSomeIngredients).test(item);
+    }
+
+    @Override
+    public Optional<Discount> apply(OrderItem order, double netOrderPrice) {
+        if (shouldApplyLightSale.test(order)) {
+            return Optional.of(new Discount(name, netOrderPrice * percentage));
+        }
+        return Optional.empty();
+    }
+
+}
