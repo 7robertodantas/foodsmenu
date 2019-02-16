@@ -34,22 +34,22 @@ public class IngredientQuantityStrategy implements SaleStrategy {
     @Override
     public Optional<Discount> apply(OrderItem order, double netOrderPrice) {
 
-        long quantity = order.getIngredients()
+        long occurrences = order.getIngredients()
                 .stream()
                 .filter(i -> ingredient.getName().equalsIgnoreCase(i))
                 .count();
 
-        if (quantity <= 0) {
+        if (occurrences <= 0) {
             return Optional.empty();
         }
 
-        final long howManyDiscount = (quantity / forEachQuantityOf) * quantityThatWillBeFree;
+        final long howManyOcurrencesToDiscount = (occurrences / forEachQuantityOf) * quantityThatWillBeFree;
 
-        if (howManyDiscount <= 0) {
+        if (howManyOcurrencesToDiscount <= 0) {
             return Optional.empty();
         }
 
-        final double discountValue = howManyDiscount * ingredient.getValue();
+        final double discountValue = howManyOcurrencesToDiscount * ingredient.getValue();
         return Optional.of(new Discount(name, discountValue));
     }
 

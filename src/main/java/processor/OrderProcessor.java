@@ -15,9 +15,6 @@ import static java.util.stream.Collectors.toSet;
 public class OrderProcessor {
 
     @Getter
-    private final Menu menu;
-
-    @Getter
     private final List<SaleStrategy> strategies;
 
     @Getter
@@ -33,12 +30,12 @@ public class OrderProcessor {
                 .collect(toSet());
 
         if(!rejectedIngredients.isEmpty()){
-            throw new IllegalArgumentException("Unkown price of the given ingredients: " + String.join(",", rejectedIngredients));
+            throw new IllegalStateException("Unkown price of the given ingredients: " + String.join(",", rejectedIngredients));
         }
 
         final List<ReceiptItem> receiptItems = order.getItems()
                 .stream()
-                .map(this::applyDiscounts)
+                .map(this::processOrderItem)
                 .collect(toList());
 
         final double costPrice = receiptItems
@@ -47,29 +44,29 @@ public class OrderProcessor {
                 .reduce(Double::sum)
                 .orElse(0d);
 
-        final double sellingPrice = receiptItems
+        final double totalPrice = receiptItems
                 .stream()
                 .map(ReceiptItem::getTotalPrice)
                 .reduce(Double::sum)
                 .orElse(0d);
 
-        return new Receipt(receiptItems, costPrice, sellingPrice);
+        return new Receipt(receiptItems, costPrice, totalPrice);
     }
 
-    public ReceiptItem applyDiscounts(final OrderItem item) {
+    private ReceiptItem processOrderItem(final OrderItem item) {
         final double itemCostPrice = calculateCostPrice(item);
-        return applyDiscounts(item, itemCostPrice, itemCostPrice, new Stack<>(), strategies.stream().collect(Collectors.toCollection(Stack::new)));
+        return processOrderItem(item, itemCostPrice, itemCostPrice, new Stack<>(), strategies.stream().collect(Collectors.toCollection(Stack::new)));
     }
 
-    private ReceiptItem applyDiscounts(final OrderItem item,
-                                       final double itemCostPrice,
-                                       final double itemCurrentValue,
-                                       final Stack<Discount> appliedDiscounts,
-                                       final Stack<SaleStrategy> strategies) {
+    private ReceiptItem processOrderItem(final OrderItem item,
+                                         final double itemCostPrice,
+                                         final double itemCurrentValue,
+                                         final Stack<Discount> appliedDiscounts,
+                                         final Stack<SaleStrategy> strategies) {
 
         if (strategies.isEmpty() || itemCurrentValue <= 0) {
             final double itemSellingPrice = Math.max(itemCurrentValue, 0);
-            return new ReceiptItem(item, appliedDiscounts, itemSellingPrice, itemCostPrice);
+            return new ReceiptItem(item, appliedDiscounts, itemCostPrice, itemSellingPrice);
         }
 
         final SaleStrategy discountStrategy = strategies.pop();
@@ -83,7 +80,7 @@ public class OrderProcessor {
             appliedDiscounts.push(discount.get());
         }
 
-        return applyDiscounts(item, itemCostPrice, newCurrentValue, appliedDiscounts, strategies);
+        return processOrderItem(item, itemCostPrice, newCurrentValue, appliedDiscounts, strategies);
     }
 
     private double calculateCostPrice(OrderItem orderItem){
