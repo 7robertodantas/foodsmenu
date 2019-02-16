@@ -101,6 +101,26 @@ class OrderProcessorTest {
         );
     }
 
+    @Test
+    @DisplayName("Should apply multiples discounts until price remains positive")
+    public void shouldApplyMultiplesDiscountsUntilPriceRemainsPositive() {
+        SaleStrategy discountWholeValueMinusOne = (order, netOrderPrice) -> Optional.of(new Discount("Whole price - 1 discount", netOrderPrice-1));
+        SaleStrategy discountWholeValueMinusTwo = (order, netOrderPrice) -> Optional.of(new Discount("Whole price - 2 discount", netOrderPrice-2));
+
+        OrderItem itemEggBacon = new OrderItem("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
+        Order order = new Order(singletonList(itemEggBacon));
+        double orderCostWithoutDiscount = calculateCostPrice(order);
+
+        OrderProcessor orderProcessor = new OrderProcessor(asList(discountWholeValueMinusOne, discountWholeValueMinusTwo), pricePerIngredient);
+        Receipt receipt = orderProcessor.process(order);
+
+        assertThat(receipt.getCostPrice()).isEqualTo(orderCostWithoutDiscount);
+        assertThat(receipt.getTotalPrice()).isBetween(orderCostWithoutDiscount - 2, orderCostWithoutDiscount - 1); // we can not assume the order in which the sales strategies were applied.
+        assertThat(receipt.getItems()).allSatisfy((item) ->
+                assertThat(item.getDiscounts()).hasSize(1) // only one of them should be applied, cause the other would give a negative price
+        );
+    }
+
     private double calculateCostPrice(Order order) {
         return order.getItems()
                 .stream()

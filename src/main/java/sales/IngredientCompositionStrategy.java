@@ -22,9 +22,9 @@ public class IngredientCompositionStrategy implements SaleStrategy {
     @Getter
     private final Set<String> shouldNotHave;
 
-    private Predicate<OrderItem> containsAllRequiredIngredients;
-    private Predicate<OrderItem> doesnContainsSomeIngredients;
-    private Predicate<OrderItem> shouldApplyLightSale;
+    private final Predicate<OrderItem> containsAllRequiredIngredients;
+    private final Predicate<OrderItem> doesnContainsSomeIngredients;
+    private final Predicate<OrderItem> shouldApplyLightSale;
 
     public IngredientCompositionStrategy(String name, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
         this.name = name;
