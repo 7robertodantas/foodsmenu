@@ -1,17 +1,20 @@
 package com.food.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
-@Builder
-@AllArgsConstructor
+import java.beans.ConstructorProperties;
+
 public class IngredientDto {
 
     @Getter
-    private final String name;
+    private String name;
 
     @Getter
-    private final double price;
+    private double value;
 
+    @ConstructorProperties({"name", "value"})
+    public IngredientDto(String name, double value) {
+        this.name = name;
+        this.value = value;
+    }
 }

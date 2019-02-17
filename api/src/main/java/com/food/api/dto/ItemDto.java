@@ -1,13 +1,10 @@
 package com.food.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
+import java.beans.ConstructorProperties;
 import java.util.List;
 
-@Builder
-@AllArgsConstructor
 public class ItemDto {
 
     @Getter
@@ -19,4 +16,10 @@ public class ItemDto {
     @Getter
     private final double price;
 
+    @ConstructorProperties({"name", "ingredients", "price"})
+    public ItemDto(String name, List<String> ingredients, double price) {
+        this.name = name;
+        this.ingredients = ingredients;
+        this.price = price;
+    }
 }

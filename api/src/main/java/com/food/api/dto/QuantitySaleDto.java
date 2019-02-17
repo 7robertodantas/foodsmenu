@@ -1,11 +1,9 @@
 package com.food.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
-@Builder
-@AllArgsConstructor
+import java.beans.ConstructorProperties;
+
 public class QuantitySaleDto {
 
     @Getter
@@ -20,4 +18,11 @@ public class QuantitySaleDto {
     @Getter
     private final int quantityThatWillBeFree;
 
+    @ConstructorProperties({"name", "ingredient", "forEachQuantityOf", "quantityThatWillBeFree"})
+    public QuantitySaleDto(String name, String ingredient, int forEachQuantityOf, int quantityThatWillBeFree) {
+        this.name = name;
+        this.ingredient = ingredient;
+        this.forEachQuantityOf = forEachQuantityOf;
+        this.quantityThatWillBeFree = quantityThatWillBeFree;
+    }
 }

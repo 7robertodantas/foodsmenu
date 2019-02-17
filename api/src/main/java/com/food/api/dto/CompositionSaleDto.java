@@ -1,13 +1,10 @@
 package com.food.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
+import java.beans.ConstructorProperties;
 import java.util.Set;
 
-@Builder
-@AllArgsConstructor
 public class CompositionSaleDto {
 
     @Getter
@@ -22,4 +19,11 @@ public class CompositionSaleDto {
     @Getter
     private final Set<String> shouldNotHave;
 
+    @ConstructorProperties({"name", "percentage", "shouldHave", "shouldNotHave"})
+    public CompositionSaleDto(String name, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
+        this.name = name;
+        this.percentage = percentage;
+        this.shouldHave = shouldHave;
+        this.shouldNotHave = shouldNotHave;
+    }
 }

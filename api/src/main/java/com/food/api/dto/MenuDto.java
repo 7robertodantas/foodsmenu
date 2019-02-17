@@ -1,13 +1,10 @@
 package com.food.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
+import java.beans.ConstructorProperties;
 import java.util.List;
 
-@Builder
-@AllArgsConstructor
 public class MenuDto {
 
     @Getter
@@ -16,7 +13,12 @@ public class MenuDto {
     @Getter
     private final SalesDto sales;
 
-    @AllArgsConstructor
+    @ConstructorProperties({"items", "sales"})
+    public MenuDto(List<ItemDto> items, SalesDto sales) {
+        this.items = items;
+        this.sales = sales;
+    }
+
     public static class SalesDto {
 
         @Getter
@@ -25,6 +27,11 @@ public class MenuDto {
         @Getter
         private final List<CompositionSaleDto> composition;
 
+        @ConstructorProperties({"quantity", "composition"})
+        public SalesDto(List<QuantitySaleDto> quantity, List<CompositionSaleDto> composition) {
+            this.quantity = quantity;
+            this.composition = composition;
+        }
     }
 
 }

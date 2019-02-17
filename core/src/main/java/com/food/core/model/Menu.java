@@ -13,6 +13,6 @@ public class Menu {
     private final List<SaleStrategy> sales;
 
     @Getter
-    private final List<MenuItem> menu;
+    private final List<MenuItem> items;
 
 }
