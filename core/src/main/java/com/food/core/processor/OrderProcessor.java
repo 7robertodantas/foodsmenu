@@ -30,7 +30,7 @@ public class OrderProcessor {
                 .collect(toSet());
 
         if(!rejectedIngredients.isEmpty()){
-            throw new IllegalStateException("Unkown price of the given ingredients: " + String.join(",", rejectedIngredients));
+            throw new IllegalStateException("Unknown price of the given ingredients: " + String.join(",", rejectedIngredients));
         }
 
         final List<ReceiptItem> receiptItems = order.getItems()

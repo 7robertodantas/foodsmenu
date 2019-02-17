@@ -26,28 +26,22 @@ public class IngredientHandler {
 
     public Mono<ServerResponse> getIngredients(ServerRequest request) {
         return ingredientRepository.findAll()
-                .map(this::toDto)
                 .collectList()
                 .flatMap(data -> ok()
-                        .contentType(APPLICATION_JSON)
                         .body(fromObject(data)));
     }
 
     public Mono<ServerResponse> putIngredient(ServerRequest request) {
         return request.bodyToMono(IngredientDto.class)
-                .map(this::fromDto)
                 .flatMap(ingredientRepository::save)
                 .flatMap(saved -> ok()
-                        .contentType(APPLICATION_JSON)
                         .body(fromObject(saved)));
     }
 
     public Mono<ServerResponse> postIngredient(ServerRequest request) {
         return request.bodyToMono(IngredientDto.class)
-                .map(this::fromDto)
                 .flatMap(ingredientRepository::save)
                 .flatMap(saved -> ok()
-                        .contentType(APPLICATION_JSON)
                         .body(fromObject(saved)));
     }
 
@@ -57,14 +51,5 @@ public class IngredientHandler {
                 .flatMap(ingredientRepository::delete)
                 .flatMap((none) -> noContent().build());
     }
-
-    private Ingredient fromDto(IngredientDto dto) {
-        return new Ingredient(dto.getName(), dto.getValue());
-    }
-
-    private IngredientDto toDto(Ingredient ingredient) {
-        return new IngredientDto(ingredient.getName(), ingredient.getValue());
-    }
-
 
 }

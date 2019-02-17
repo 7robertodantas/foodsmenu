@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface SaleStrategy {
 
+    String getDescription();
+
     Optional<Discount> apply(OrderItem order, double netOrderPrice);
 
 }

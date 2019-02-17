@@ -8,7 +8,7 @@ import java.util.Set;
 public class CompositionSaleDto {
 
     @Getter
-    private final String name;
+    private final String description;
 
     @Getter
     private final double percentage;
@@ -19,9 +19,9 @@ public class CompositionSaleDto {
     @Getter
     private final Set<String> shouldNotHave;
 
-    @ConstructorProperties({"name", "percentage", "shouldHave", "shouldNotHave"})
-    public CompositionSaleDto(String name, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
-        this.name = name;
+    @ConstructorProperties({"description", "percentage", "shouldHave", "shouldNotHave"})
+    public CompositionSaleDto(String description, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
+        this.description = description;
         this.percentage = percentage;
         this.shouldHave = shouldHave;
         this.shouldNotHave = shouldNotHave;

@@ -10,7 +10,7 @@ import java.util.Optional;
 public class QuantitySaleStrategy implements SaleStrategy {
 
     @Getter
-    private final String name;
+    private final String description;
 
     @Getter
     private final Ingredient ingredient;
@@ -21,8 +21,8 @@ public class QuantitySaleStrategy implements SaleStrategy {
     @Getter
     private final int quantityThatWillBeFree;
 
-    public QuantitySaleStrategy(String name, Ingredient ingredient, int forEachQuantityOf, int quantityThatWillBeFree) {
-        this.name = name;
+    public QuantitySaleStrategy(String description, Ingredient ingredient, int forEachQuantityOf, int quantityThatWillBeFree) {
+        this.description = description;
         this.ingredient = ingredient;
         this.forEachQuantityOf = forEachQuantityOf;
         this.quantityThatWillBeFree = quantityThatWillBeFree;
@@ -50,7 +50,7 @@ public class QuantitySaleStrategy implements SaleStrategy {
         }
 
         final double discountValue = howManyOcurrencesToDiscount * ingredient.getValue();
-        return Optional.of(new Discount(name, discountValue));
+        return Optional.of(new Discount(description, discountValue));
     }
 
 }

@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 public class CompositionSaleStrategy implements SaleStrategy {
 
     @Getter
-    private final String name;
+    private final String description;
 
     @Getter
     private final double percentage;
@@ -26,8 +26,8 @@ public class CompositionSaleStrategy implements SaleStrategy {
     private final Predicate<OrderItem> doesnContainsSomeIngredients;
     private final Predicate<OrderItem> shouldApplyLightSale;
 
-    public CompositionSaleStrategy(String name, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
-        this.name = name;
+    public CompositionSaleStrategy(String description, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
+        this.description = description;
         this.percentage = percentage;
         this.shouldHave = shouldHave;
         this.shouldNotHave = shouldNotHave;
@@ -46,7 +46,7 @@ public class CompositionSaleStrategy implements SaleStrategy {
     @Override
     public Optional<Discount> apply(OrderItem order, double netOrderPrice) {
         if (shouldApplyLightSale.test(order)) {
-            return Optional.of(new Discount(name, netOrderPrice * percentage));
+            return Optional.of(new Discount(description, netOrderPrice * percentage));
         }
         return Optional.empty();
     }

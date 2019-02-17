@@ -8,13 +8,17 @@ import java.util.List;
 public class MenuDto {
 
     @Getter
+    private final String id;
+
+    @Getter
     private final List<ItemDto> items;
 
     @Getter
     private final SalesDto sales;
 
-    @ConstructorProperties({"items", "sales"})
-    public MenuDto(List<ItemDto> items, SalesDto sales) {
+    @ConstructorProperties({"id", "items", "sales"})
+    public MenuDto(String id, List<ItemDto> items, SalesDto sales) {
+        this.id = id;
         this.items = items;
         this.sales = sales;
     }
