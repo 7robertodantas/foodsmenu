@@ -1,34 +1,48 @@
 package com.food.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.food.core.facade.Menu;
+import com.food.core.facade.MenuItem;
+import com.food.core.sales.SaleStrategy;
 import lombok.Getter;
 
 import java.beans.ConstructorProperties;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class MenuDto {
+import static java.util.stream.Collectors.toList;
+
+public class MenuDto implements Menu {
 
     @Getter
+    @JsonProperty("id")
     private final String id;
 
     @Getter
-    private final List<ItemDto> items;
+    @JsonProperty("items")
+    private final List<MenuItemDto> itemsDto;
 
     @Getter
-    private final SalesDto sales;
+    @JsonProperty("sales")
+    private final SalesDto salesDto;
 
     @ConstructorProperties({"id", "items", "sales"})
-    public MenuDto(String id, List<ItemDto> items, SalesDto sales) {
+    public MenuDto(String id, List<MenuItemDto> items, SalesDto sales) {
         this.id = id;
-        this.items = items;
-        this.sales = sales;
+        this.itemsDto = items;
+        this.salesDto = sales;
     }
 
     public static class SalesDto {
 
         @Getter
+        @JsonProperty("quantity")
         private final List<QuantitySaleDto> quantity;
 
         @Getter
+        @JsonProperty("composition")
         private final List<CompositionSaleDto> composition;
 
         @ConstructorProperties({"quantity", "composition"})
@@ -36,6 +50,16 @@ public class MenuDto {
             this.quantity = quantity;
             this.composition = composition;
         }
+    }
+
+    @JsonIgnore
+    public List<SaleStrategy> getSales(){
+        return Stream.concat(salesDto.getComposition().stream(), salesDto.getQuantity().stream()).collect(toList());
+    }
+
+    @JsonIgnore
+    public List<MenuItem> getItems() {
+        return new ArrayList<>(itemsDto);
     }
 
 }

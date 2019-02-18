@@ -1,10 +1,11 @@
 package com.food.api.dto;
 
+import com.food.core.facade.Ingredient;
 import lombok.Getter;
 
 import java.beans.ConstructorProperties;
 
-public class IngredientDto {
+public class IngredientDto implements Ingredient {
 
     @Getter
     private String name;

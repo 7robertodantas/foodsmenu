@@ -1,10 +1,16 @@
 package com.food.api.dto;
 
+import com.food.core.facade.Discount;
+import com.food.core.facade.OrderContext;
+import com.food.core.facade.OrderItem;
+import com.food.core.sales.QuantitySaleStrategy;
+import com.food.core.sales.SaleStrategy;
 import lombok.Getter;
 
 import java.beans.ConstructorProperties;
+import java.util.Optional;
 
-public class QuantitySaleDto {
+public class QuantitySaleDto implements SaleStrategy {
 
     @Getter
     private final String description;
@@ -24,5 +30,10 @@ public class QuantitySaleDto {
         this.ingredient = ingredient;
         this.forEachQuantityOf = forEachQuantityOf;
         this.quantityThatWillBeFree = quantityThatWillBeFree;
+    }
+
+    @Override
+    public Optional<Discount> apply(OrderContext context, OrderItem order) {
+        return new QuantitySaleStrategy(description, ingredient, forEachQuantityOf, quantityThatWillBeFree).apply(context, order);
     }
 }

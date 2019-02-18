@@ -8,7 +8,6 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
@@ -39,7 +38,7 @@ public class MenuHandler {
     public Mono<ServerResponse> putMenu(ServerRequest request) {
         String id = request.pathVariable("id");
         return request.bodyToMono(MenuDto.class)
-                .map(menu -> new MenuDto(id, menu.getItems(), menu.getSales()))
+                .map(menu -> new MenuDto(id, menu.getItemsDto(), menu.getSalesDto()))
                 .flatMap(menuRepository::save)
                 .flatMap(saved -> ok()
                         .body(fromObject(saved)));

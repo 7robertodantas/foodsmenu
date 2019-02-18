@@ -1,8 +1,11 @@
 package com.food.core.sales;
 
-import com.food.core.model.Discount;
-import com.food.core.model.Ingredient;
-import com.food.core.model.OrderItem;
+import com.food.core.facade.Discount;
+import com.food.core.facade.OrderContext;
+import com.food.core.facade.OrderItem;
+import com.food.core.model.IngredientImpl;
+import com.food.core.model.OrderContextImpl;
+import com.food.core.model.OrderItemImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +13,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -28,14 +33,18 @@ class QuantitySaleStrategyTest {
                           int howManyInOrder,
                           double valueOfEach,
                           double expectedDiscount) {
-        Ingredient ingredient = new Ingredient("Ingredient", valueOfEach);
-        OrderItem order = new OrderItem("Item", IntStream.range(0, howManyInOrder).boxed()
+
+        OrderItem order = new OrderItemImpl("Item", IntStream.range(0, howManyInOrder).boxed()
                 .map(i -> "Ingredient").collect(toList()));
 
         String description = String.format("For each %s Ingredient pay only %s", forEachQuantityOf, forEachQuantityOf - quantityThatWillBeFree);
 
-        QuantitySaleStrategy strategy = new QuantitySaleStrategy(description, ingredient, forEachQuantityOf, quantityThatWillBeFree);
-        Optional<Discount> discount = strategy.apply(order, order.getIngredients().size() * valueOfEach);
+        Map<String, Double> pricePerIngredient = new HashMap<>();
+        pricePerIngredient.put("Ingredient", valueOfEach);
+
+        OrderContext orderContext = new OrderContextImpl(order.getIngredients().size() * valueOfEach, pricePerIngredient);
+        QuantitySaleStrategy strategy = new QuantitySaleStrategy(description, "Ingredient", forEachQuantityOf, quantityThatWillBeFree);
+        Optional<Discount> discount = strategy.apply(orderContext, order);
 
         if (expectedDiscount > 0.0) {
             assertThat(discount).isPresent();
@@ -50,8 +59,7 @@ class QuantitySaleStrategyTest {
     @DisplayName("Should not allow free quantity greater than each quantity that will be applied.")
     public void testIllegalArgument() {
         Assertions.assertThrows(IllegalStateException.class, () ->
-                new QuantitySaleStrategy("",
-                        new Ingredient("", 0.0), 3, 4));
+                new QuantitySaleStrategy("", "Ingredient", 3, 4));
     }
 
     private static Stream<Arguments> ingredientQuantityProvider() {

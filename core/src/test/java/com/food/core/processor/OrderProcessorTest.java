@@ -1,9 +1,9 @@
 package com.food.core.processor;
 
-import com.food.core.model.Discount;
-import com.food.core.model.Order;
-import com.food.core.model.OrderItem;
-import com.food.core.model.Receipt;
+import com.food.core.facade.*;
+import com.food.core.model.DiscountImpl;
+import com.food.core.model.OrderImpl;
+import com.food.core.model.OrderItemImpl;
 import com.food.core.sales.SaleStrategy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,8 +37,8 @@ class OrderProcessorTest {
     @Test
     @DisplayName("Should reject unknown ingredients")
     public void shouldRejectUnknownIngredient() {
-        OrderItem item = new OrderItem("X-Bacon", asList("Lettuce", "Rice", "Bacon")); // "Rice" is unknown
-        Order order = new Order(singletonList(item));
+        OrderItem item = new OrderItemImpl("X-Bacon", asList("Lettuce", "Rice", "Bacon")); // "Rice" is unknown
+        Order order = new OrderImpl(singletonList(item));
         OrderProcessor orderProcessor = new OrderProcessor(emptyList(), pricePerIngredient);
         Assertions.assertThrows(IllegalStateException.class, () -> orderProcessor.process(order));
     }
@@ -46,9 +46,9 @@ class OrderProcessorTest {
     @Test
     @DisplayName("Should calculate price without com.food.core.sales strategies")
     public void shouldCalculatePriceWithoutSalesStrategies() {
-        OrderItem itemEggBacon = new OrderItem("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
-        OrderItem itemEgg = new OrderItem("X-Egg", asList("Lettuce", "Egg"));
-        Order order = new Order(asList(itemEggBacon, itemEgg));
+        OrderItem itemEggBacon = new OrderItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
+        OrderItem itemEgg = new OrderItemImpl("X-Egg", asList("Lettuce", "Egg"));
+        Order order = new OrderImpl(asList(itemEggBacon, itemEgg));
         double orderCostWithoutDiscount = calculateCostPrice(order);
 
         OrderProcessor orderProcessor = new OrderProcessor(emptyList(), pricePerIngredient);
@@ -72,13 +72,13 @@ class OrderProcessorTest {
             }
 
             @Override
-            public Optional<Discount> apply(OrderItem order, double netOrderPrice) {
-                return Optional.of(new Discount(getDescription(), netOrderPrice * percentage));
+            public Optional<Discount> apply(OrderContext context, OrderItem order) {
+                return Optional.of(new DiscountImpl(getDescription(), context.getCostPrice() * percentage));
             }
         };
 
-        OrderItem itemEggBacon = new OrderItem("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
-        Order order = new Order(singletonList(itemEggBacon));
+        OrderItem itemEggBacon = new OrderItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
+        Order order = new OrderImpl(singletonList(itemEggBacon));
         double orderCostWithoutDiscount = calculateCostPrice(order);
 
         OrderProcessor orderProcessor = new OrderProcessor(singletonList(off10), pricePerIngredient);
@@ -102,13 +102,13 @@ class OrderProcessorTest {
             }
 
             @Override
-            public Optional<Discount> apply(OrderItem order, double netOrderPrice) {
-                return Optional.of(new Discount(getDescription(), netOrderPrice * percentage));
+            public Optional<Discount> apply(OrderContext context, OrderItem order) {
+                return Optional.of(new DiscountImpl(getDescription(), context.getCostPrice() * percentage));
             }
         };
 
-        OrderItem itemEggBacon = new OrderItem("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
-        Order order = new Order(singletonList(itemEggBacon));
+        OrderItem itemEggBacon = new OrderItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
+        Order order = new OrderImpl(singletonList(itemEggBacon));
         double orderCostWithoutDiscount = calculateCostPrice(order);
 
         OrderProcessor orderProcessor = new OrderProcessor(singletonList(off120percent), pricePerIngredient);
@@ -132,8 +132,8 @@ class OrderProcessorTest {
             }
 
             @Override
-            public Optional<Discount> apply(OrderItem order, double netOrderPrice) {
-                return Optional.of(new Discount(getDescription(), netOrderPrice - 1));
+            public Optional<Discount> apply(OrderContext context, OrderItem order) {
+                return Optional.of(new DiscountImpl(getDescription(), context.getCostPrice() - 1));
             }
         };
 
@@ -144,13 +144,13 @@ class OrderProcessorTest {
             }
 
             @Override
-            public Optional<Discount> apply(OrderItem order, double netOrderPrice) {
-                return Optional.of(new Discount(getDescription(), netOrderPrice - 2));
+            public Optional<Discount> apply(OrderContext context, OrderItem order) {
+                return Optional.of(new DiscountImpl(getDescription(), context.getCostPrice() - 2));
             }
         };
 
-        OrderItem itemEggBacon = new OrderItem("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
-        Order order = new Order(singletonList(itemEggBacon));
+        OrderItem itemEggBacon = new OrderItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
+        Order order = new OrderImpl(singletonList(itemEggBacon));
         double orderCostWithoutDiscount = calculateCostPrice(order);
 
         OrderProcessor orderProcessor = new OrderProcessor(asList(discountWholeValueMinusOne, discountWholeValueMinusTwo), pricePerIngredient);
