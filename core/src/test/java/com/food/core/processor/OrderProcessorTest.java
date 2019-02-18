@@ -65,7 +65,17 @@ class OrderProcessorTest {
     @DisplayName("Should apply discount if price remains positive")
     public void shouldApplyDiscountIfPriceRemainsPositive() {
         final double percentage = 0.1;
-        SaleStrategy off10 = (order, netOrderPrice) -> Optional.of(new Discount("10% OFF", netOrderPrice * percentage));
+        SaleStrategy off10 = new SaleStrategy() {
+            @Override
+            public String getDescription() {
+                return "10% OFF";
+            }
+
+            @Override
+            public Optional<Discount> apply(OrderItem order, double netOrderPrice) {
+                return Optional.of(new Discount(getDescription(), netOrderPrice * percentage));
+            }
+        };
 
         OrderItem itemEggBacon = new OrderItem("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
         Order order = new Order(singletonList(itemEggBacon));
@@ -85,7 +95,17 @@ class OrderProcessorTest {
     @DisplayName("Should not apply discount if price is going to be negative")
     public void shouldNotApplyDiscountIfPriceIsGoingToBeNegative() {
         final double percentage = 1.2;
-        SaleStrategy off120percent = (order, netOrderPrice) -> Optional.of(new Discount("120% OFF", netOrderPrice * percentage));
+        SaleStrategy off120percent = new SaleStrategy() {
+            @Override
+            public String getDescription() {
+                return "120% OFF";
+            }
+
+            @Override
+            public Optional<Discount> apply(OrderItem order, double netOrderPrice) {
+                return Optional.of(new Discount(getDescription(), netOrderPrice * percentage));
+            }
+        };
 
         OrderItem itemEggBacon = new OrderItem("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
         Order order = new Order(singletonList(itemEggBacon));
@@ -104,8 +124,30 @@ class OrderProcessorTest {
     @Test
     @DisplayName("Should apply multiples discounts until price remains positive")
     public void shouldApplyMultiplesDiscountsUntilPriceRemainsPositive() {
-        SaleStrategy discountWholeValueMinusOne = (order, netOrderPrice) -> Optional.of(new Discount("Whole price - 1 discount", netOrderPrice-1));
-        SaleStrategy discountWholeValueMinusTwo = (order, netOrderPrice) -> Optional.of(new Discount("Whole price - 2 discount", netOrderPrice-2));
+
+        SaleStrategy discountWholeValueMinusOne = new SaleStrategy() {
+            @Override
+            public String getDescription() {
+                return "Whole price - 1 discount";
+            }
+
+            @Override
+            public Optional<Discount> apply(OrderItem order, double netOrderPrice) {
+                return Optional.of(new Discount(getDescription(), netOrderPrice - 1));
+            }
+        };
+
+        SaleStrategy discountWholeValueMinusTwo = new SaleStrategy() {
+            @Override
+            public String getDescription() {
+                return "Whole price - 2 discount";
+            }
+
+            @Override
+            public Optional<Discount> apply(OrderItem order, double netOrderPrice) {
+                return Optional.of(new Discount(getDescription(), netOrderPrice - 2));
+            }
+        };
 
         OrderItem itemEggBacon = new OrderItem("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"));
         Order order = new Order(singletonList(itemEggBacon));
