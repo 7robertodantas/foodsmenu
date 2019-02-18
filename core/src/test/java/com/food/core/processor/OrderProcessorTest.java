@@ -72,7 +72,7 @@ class OrderProcessorTest {
             }
 
             @Override
-            public Optional<Discount> apply(OrderContext context, OrderItem order) {
+            public Optional<Discount> apply(OrderItemContext context, OrderItem order) {
                 return Optional.of(new DiscountImpl(getDescription(), context.getCostPrice() * percentage));
             }
         };
@@ -102,7 +102,7 @@ class OrderProcessorTest {
             }
 
             @Override
-            public Optional<Discount> apply(OrderContext context, OrderItem order) {
+            public Optional<Discount> apply(OrderItemContext context, OrderItem order) {
                 return Optional.of(new DiscountImpl(getDescription(), context.getCostPrice() * percentage));
             }
         };
@@ -132,7 +132,7 @@ class OrderProcessorTest {
             }
 
             @Override
-            public Optional<Discount> apply(OrderContext context, OrderItem order) {
+            public Optional<Discount> apply(OrderItemContext context, OrderItem order) {
                 return Optional.of(new DiscountImpl(getDescription(), context.getCostPrice() - 1));
             }
         };
@@ -144,7 +144,7 @@ class OrderProcessorTest {
             }
 
             @Override
-            public Optional<Discount> apply(OrderContext context, OrderItem order) {
+            public Optional<Discount> apply(OrderItemContext context, OrderItem order) {
                 return Optional.of(new DiscountImpl(getDescription(), context.getCostPrice() - 2));
             }
         };

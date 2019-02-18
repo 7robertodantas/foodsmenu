@@ -2,7 +2,7 @@ package com.food.core.sales;
 
 import com.food.core.facade.Discount;
 import com.food.core.facade.OrderItem;
-import com.food.core.model.OrderContextImpl;
+import com.food.core.model.OrderItemContextImpl;
 import com.food.core.model.OrderItemImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +40,7 @@ class CompositionSaleStrategyTest {
 
 
         CompositionSaleStrategy strategy = new CompositionSaleStrategy("", percentage, shouldHave, shouldNotHave);
-        Optional<Discount> discount = strategy.apply(new OrderContextImpl(netPrice, pricePerIngredient), order);
+        Optional<Discount> discount = strategy.apply(new OrderItemContextImpl(netPrice, pricePerIngredient), order);
 
         if (expectedDiscount > 0.0) {
             assertThat(discount).isPresent();

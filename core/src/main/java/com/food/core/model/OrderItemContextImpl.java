@@ -1,13 +1,13 @@
 package com.food.core.model;
 
-import com.food.core.facade.OrderContext;
+import com.food.core.facade.OrderItemContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Map;
 
 @AllArgsConstructor
-public class OrderContextImpl implements OrderContext {
+public class OrderItemContextImpl implements OrderItemContext {
 
     @Getter
     private double costPrice;

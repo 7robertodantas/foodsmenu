@@ -1,7 +1,7 @@
 package com.food.api.dto;
 
 import com.food.core.facade.Discount;
-import com.food.core.facade.OrderContext;
+import com.food.core.facade.OrderItemContext;
 import com.food.core.facade.OrderItem;
 import com.food.core.sales.CompositionSaleStrategy;
 import com.food.core.sales.SaleStrategy;
@@ -34,7 +34,7 @@ public class CompositionSaleDto implements SaleStrategy {
     }
 
     @Override
-    public Optional<Discount> apply(OrderContext context, OrderItem order) {
+    public Optional<Discount> apply(OrderItemContext context, OrderItem order) {
         return new CompositionSaleStrategy(description, percentage, shouldHave, shouldNotHave).apply(context, order);
     }
 }

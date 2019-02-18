@@ -2,7 +2,7 @@ package com.food.core.facade;
 
 import java.util.Map;
 
-public interface OrderContext {
+public interface OrderItemContext {
 
     double getCostPrice();
 

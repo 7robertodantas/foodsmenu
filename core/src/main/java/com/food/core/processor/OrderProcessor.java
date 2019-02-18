@@ -1,7 +1,7 @@
 package com.food.core.processor;
 
 import com.food.core.facade.*;
-import com.food.core.model.OrderContextImpl;
+import com.food.core.model.OrderItemContextImpl;
 import com.food.core.model.ReceiptImpl;
 import com.food.core.model.ReceiptItemImpl;
 import com.food.core.sales.SaleStrategy;
@@ -58,23 +58,23 @@ public class OrderProcessor {
 
     private ReceiptItem processOrderItem(final OrderItem item) {
         final double itemCostPrice = calculateCostPrice(item);
-        final OrderContext orderContext = new OrderContextImpl(itemCostPrice, pricePerIngredient);
-        return processOrderItem(item, orderContext, itemCostPrice, new Stack<>(), strategies.stream().collect(Collectors.toCollection(Stack::new)));
+        final OrderItemContext orderItemContext = new OrderItemContextImpl(itemCostPrice, pricePerIngredient);
+        return processOrderItem(item, orderItemContext, itemCostPrice, new Stack<>(), strategies.stream().collect(Collectors.toCollection(Stack::new)));
     }
 
     private ReceiptItem processOrderItem(final OrderItem item,
-                                         final OrderContext orderContext,
+                                         final OrderItemContext orderItemContext,
                                          final double itemCurrentValue,
                                          final Stack<Discount> appliedDiscounts,
                                          final Stack<SaleStrategy> strategies) {
 
         if (strategies.isEmpty() || itemCurrentValue <= 0) {
             final double itemSellingPrice = Math.max(itemCurrentValue, 0);
-            return new ReceiptItemImpl(item, appliedDiscounts, orderContext.getCostPrice(), itemSellingPrice);
+            return new ReceiptItemImpl(item, appliedDiscounts, orderItemContext.getCostPrice(), itemSellingPrice);
         }
 
         final SaleStrategy discountStrategy = strategies.pop();
-        final Optional<Discount> discount = discountStrategy.apply(orderContext, item);
+        final Optional<Discount> discount = discountStrategy.apply(orderItemContext, item);
         final double newCurrentValue = discount.flatMap(d -> {
             final double newValue = itemCurrentValue - d.getValue();
             return newValue >= 0 ? Optional.of(newValue) : Optional.empty();
@@ -84,7 +84,7 @@ public class OrderProcessor {
             appliedDiscounts.push(discount.get());
         }
 
-        return processOrderItem(item, orderContext, newCurrentValue, appliedDiscounts, strategies);
+        return processOrderItem(item, orderItemContext, newCurrentValue, appliedDiscounts, strategies);
     }
 
     private double calculateCostPrice(OrderItem orderItem){

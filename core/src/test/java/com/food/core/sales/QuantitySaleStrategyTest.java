@@ -1,10 +1,9 @@
 package com.food.core.sales;
 
 import com.food.core.facade.Discount;
-import com.food.core.facade.OrderContext;
+import com.food.core.facade.OrderItemContext;
 import com.food.core.facade.OrderItem;
-import com.food.core.model.IngredientImpl;
-import com.food.core.model.OrderContextImpl;
+import com.food.core.model.OrderItemContextImpl;
 import com.food.core.model.OrderItemImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -42,9 +41,9 @@ class QuantitySaleStrategyTest {
         Map<String, Double> pricePerIngredient = new HashMap<>();
         pricePerIngredient.put("Ingredient", valueOfEach);
 
-        OrderContext orderContext = new OrderContextImpl(order.getIngredients().size() * valueOfEach, pricePerIngredient);
+        OrderItemContext orderItemContext = new OrderItemContextImpl(order.getIngredients().size() * valueOfEach, pricePerIngredient);
         QuantitySaleStrategy strategy = new QuantitySaleStrategy(description, "Ingredient", forEachQuantityOf, quantityThatWillBeFree);
-        Optional<Discount> discount = strategy.apply(orderContext, order);
+        Optional<Discount> discount = strategy.apply(orderItemContext, order);
 
         if (expectedDiscount > 0.0) {
             assertThat(discount).isPresent();

@@ -1,7 +1,7 @@
 package com.food.core.sales;
 
 import com.food.core.facade.Discount;
-import com.food.core.facade.OrderContext;
+import com.food.core.facade.OrderItemContext;
 import com.food.core.facade.OrderItem;
 import com.food.core.model.DiscountImpl;
 import lombok.Getter;
@@ -46,7 +46,7 @@ public class CompositionSaleStrategy implements SaleStrategy {
     }
 
     @Override
-    public Optional<Discount> apply(OrderContext context, OrderItem order) {
+    public Optional<Discount> apply(OrderItemContext context, OrderItem order) {
         if (shouldApplyLightSale.test(order)) {
             return Optional.of(new DiscountImpl(description, context.getCostPrice() * percentage));
         }
