@@ -1,8 +1,7 @@
 package com.food.api.dto;
 
 import com.food.core.facade.Discount;
-import com.food.core.facade.OrderItemContext;
-import com.food.core.facade.OrderItem;
+import com.food.core.facade.ItemContext;
 import com.food.core.sales.QuantitySaleStrategy;
 import com.food.core.sales.SaleStrategy;
 import lombok.Getter;
@@ -11,6 +10,9 @@ import java.beans.ConstructorProperties;
 import java.util.Optional;
 
 public class QuantitySaleDto implements SaleStrategy {
+
+    @Getter
+    private final String code;
 
     @Getter
     private final String description;
@@ -24,8 +26,9 @@ public class QuantitySaleDto implements SaleStrategy {
     @Getter
     private final int quantityThatWillBeFree;
 
-    @ConstructorProperties({"description", "ingredient", "forEachQuantityOf", "quantityThatWillBeFree"})
-    public QuantitySaleDto(String description, String ingredient, int forEachQuantityOf, int quantityThatWillBeFree) {
+    @ConstructorProperties({"code", "description", "ingredient", "forEachQuantityOf", "quantityThatWillBeFree"})
+    public QuantitySaleDto(String code, String description, String ingredient, int forEachQuantityOf, int quantityThatWillBeFree) {
+        this.code = code;
         this.description = description;
         this.ingredient = ingredient;
         this.forEachQuantityOf = forEachQuantityOf;
@@ -33,7 +36,7 @@ public class QuantitySaleDto implements SaleStrategy {
     }
 
     @Override
-    public Optional<Discount> apply(OrderItemContext context, OrderItem order) {
-        return new QuantitySaleStrategy(description, ingredient, forEachQuantityOf, quantityThatWillBeFree).apply(context, order);
+    public Optional<Discount> apply(ItemContext context) {
+        return new QuantitySaleStrategy(code, description, ingredient, forEachQuantityOf, quantityThatWillBeFree).apply(context);
     }
 }

@@ -1,14 +1,16 @@
 package com.food.core.sales;
 
 import com.food.core.facade.Discount;
-import com.food.core.facade.OrderItemContext;
-import com.food.core.facade.OrderItem;
+import com.food.core.facade.ItemContext;
 import com.food.core.model.DiscountImpl;
 import lombok.Getter;
 
 import java.util.Optional;
 
 public class QuantitySaleStrategy implements SaleStrategy {
+
+    @Getter
+    private final String code;
 
     @Getter
     private final String description;
@@ -22,7 +24,8 @@ public class QuantitySaleStrategy implements SaleStrategy {
     @Getter
     private final int quantityThatWillBeFree;
 
-    public QuantitySaleStrategy(String description, String ingredient, int forEachQuantityOf, int quantityThatWillBeFree) {
+    public QuantitySaleStrategy(String code, String description, String ingredient, int forEachQuantityOf, int quantityThatWillBeFree) {
+        this.code = code;
         this.description = description;
         this.ingredient = ingredient;
         this.forEachQuantityOf = forEachQuantityOf;
@@ -33,9 +36,10 @@ public class QuantitySaleStrategy implements SaleStrategy {
     }
 
     @Override
-    public Optional<Discount> apply(OrderItemContext context, OrderItem order) {
+    public Optional<Discount> apply(ItemContext context) {
 
-        long occurrences = order.getIngredients()
+        long occurrences = context.getItem()
+                .getElements()
                 .stream()
                 .filter(ingredient::equalsIgnoreCase)
                 .count();
@@ -50,7 +54,7 @@ public class QuantitySaleStrategy implements SaleStrategy {
             return Optional.empty();
         }
 
-        final double discountValue = howManyOcurrencesToDiscount * context.getPricePerIngredient().get(ingredient);
+        final double discountValue = howManyOcurrencesToDiscount * context.getValuePerElement().get(ingredient);
         return Optional.of(new DiscountImpl(description, discountValue));
     }
 

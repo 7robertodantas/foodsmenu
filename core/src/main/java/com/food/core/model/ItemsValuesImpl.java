@@ -1,17 +1,17 @@
 package com.food.core.model;
 
-import com.food.core.facade.Receipt;
-import com.food.core.facade.ReceiptItem;
+import com.food.core.facade.ItemsValues;
+import com.food.core.facade.ItemValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
 
 @AllArgsConstructor
-public class ReceiptImpl implements Receipt {
+public class ItemsValuesImpl implements ItemsValues {
 
     @Getter
-    private final List<ReceiptItem> items;
+    private final List<ItemValue> items;
 
     @Getter
     private final double costPrice;

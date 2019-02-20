@@ -1,8 +1,8 @@
 package com.food.core.sales;
 
 import com.food.core.facade.Discount;
-import com.food.core.facade.OrderItemContext;
-import com.food.core.facade.OrderItem;
+import com.food.core.facade.Item;
+import com.food.core.facade.ItemContext;
 import com.food.core.model.DiscountImpl;
 import lombok.Getter;
 
@@ -11,6 +11,9 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class CompositionSaleStrategy implements SaleStrategy {
+
+    @Getter
+    private final String code;
 
     @Getter
     private final String description;
@@ -24,21 +27,22 @@ public class CompositionSaleStrategy implements SaleStrategy {
     @Getter
     private final Set<String> shouldNotHave;
 
-    private final Predicate<OrderItem> containsAllRequiredIngredients;
-    private final Predicate<OrderItem> doesnContainsSomeIngredients;
-    private final Predicate<OrderItem> shouldApplyLightSale;
+    private final Predicate<Item> containsAllRequiredIngredients;
+    private final Predicate<Item> doesnContainsSomeIngredients;
+    private final Predicate<Item> shouldApplyLightSale;
 
-    public CompositionSaleStrategy(String description, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
+    public CompositionSaleStrategy(String code, String description, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
+        this.code = code;
         this.description = description;
         this.percentage = percentage;
         this.shouldHave = shouldHave;
         this.shouldNotHave = shouldNotHave;
         this.containsAllRequiredIngredients = item ->
-                item.getIngredients()
+                item.getElements()
                         .stream()
                         .anyMatch(shouldHave::contains) || (!shouldHave.isEmpty() || !shouldNotHave.isEmpty());
         this.doesnContainsSomeIngredients = item ->
-                item.getIngredients()
+                item.getElements()
                         .stream()
                         .noneMatch(shouldNotHave::contains);
         this.shouldApplyLightSale = item ->
@@ -46,9 +50,9 @@ public class CompositionSaleStrategy implements SaleStrategy {
     }
 
     @Override
-    public Optional<Discount> apply(OrderItemContext context, OrderItem order) {
-        if (shouldApplyLightSale.test(order)) {
-            return Optional.of(new DiscountImpl(description, context.getCostPrice() * percentage));
+    public Optional<Discount> apply(ItemContext context) {
+        if (shouldApplyLightSale.test(context.getItem())) {
+            return Optional.of(new DiscountImpl(description, context.getItemCostValue() * percentage));
         }
         return Optional.empty();
     }

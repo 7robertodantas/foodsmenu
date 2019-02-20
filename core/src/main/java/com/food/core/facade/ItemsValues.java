@@ -2,9 +2,9 @@ package com.food.core.facade;
 
 import java.util.List;
 
-public interface Receipt {
+public interface ItemsValues {
 
-    List<ReceiptItem> getItems();
+    List<ItemValue> getItems();
 
     double getCostPrice();
 

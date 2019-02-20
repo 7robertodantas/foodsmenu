@@ -1,6 +1,6 @@
 package com.food.api.handler;
 
-import com.food.api.dto.MenuDto;
+import com.food.api.dto.MenuDescriptionDto;
 import com.food.api.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,15 +37,15 @@ public class MenuHandler {
 
     public Mono<ServerResponse> putMenu(ServerRequest request) {
         String id = request.pathVariable("id");
-        return request.bodyToMono(MenuDto.class)
-                .map(menu -> new MenuDto(id, menu.getItemsDto(), menu.getSalesDto()))
+        return request.bodyToMono(MenuDescriptionDto.class)
+                .map(menu -> new MenuDescriptionDto(id, menu.getItemsDto(), menu.getSalesDto(), menu.getIngredientsDto()))
                 .flatMap(menuRepository::save)
                 .flatMap(saved -> ok()
                         .body(fromObject(saved)));
     }
 
     public Mono<ServerResponse> postMenu(ServerRequest request) {
-        return request.bodyToMono(MenuDto.class)
+        return request.bodyToMono(MenuDescriptionDto.class)
                 .flatMap(menuRepository::save)
                 .flatMap(saved -> ok()
                         .body(fromObject(saved)));

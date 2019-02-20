@@ -1,8 +1,7 @@
 package com.food.api.dto;
 
 import com.food.core.facade.Discount;
-import com.food.core.facade.OrderItemContext;
-import com.food.core.facade.OrderItem;
+import com.food.core.facade.ItemContext;
 import com.food.core.sales.CompositionSaleStrategy;
 import com.food.core.sales.SaleStrategy;
 import lombok.Getter;
@@ -12,6 +11,9 @@ import java.util.Optional;
 import java.util.Set;
 
 public class CompositionSaleDto implements SaleStrategy {
+
+    @Getter
+    private final String code;
 
     @Getter
     private final String description;
@@ -26,7 +28,8 @@ public class CompositionSaleDto implements SaleStrategy {
     private final Set<String> shouldNotHave;
 
     @ConstructorProperties({"description", "percentage", "shouldHave", "shouldNotHave"})
-    public CompositionSaleDto(String description, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
+    public CompositionSaleDto(String code, String description, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
+        this.code = code;
         this.description = description;
         this.percentage = percentage;
         this.shouldHave = shouldHave;
@@ -34,7 +37,7 @@ public class CompositionSaleDto implements SaleStrategy {
     }
 
     @Override
-    public Optional<Discount> apply(OrderItemContext context, OrderItem order) {
-        return new CompositionSaleStrategy(description, percentage, shouldHave, shouldNotHave).apply(context, order);
+    public Optional<Discount> apply(ItemContext context) {
+        return new CompositionSaleStrategy(code, description, percentage, shouldHave, shouldNotHave).apply(context);
     }
 }
