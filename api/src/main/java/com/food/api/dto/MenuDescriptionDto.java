@@ -58,11 +58,17 @@ public class MenuDescriptionDto implements ItemsContext {
             this.quantity = quantity;
             this.composition = composition;
         }
+
+        @JsonIgnore
+        public Set<SaleStrategy> getStrategies(){
+            return Stream.concat(getComposition().stream(), getQuantity().stream()).collect(toSet());
+        }
+
     }
 
     @JsonIgnore
     public Set<SaleStrategy> getStrategies(){
-        return Stream.concat(salesDto.getComposition().stream(), salesDto.getQuantity().stream()).collect(toSet());
+        return salesDto.getStrategies();
     }
 
     @JsonIgnore

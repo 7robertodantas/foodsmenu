@@ -1,9 +1,7 @@
 package com.food.api.handler;
 
-import com.food.api.dto.MenuDto;
+import com.food.api.dto.MenuDescriptionDto;
 import com.food.api.repository.MenuDescriptionRepository;
-import com.food.core.facade.ItemsValues;
-import com.food.core.processor.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -14,39 +12,43 @@ import static org.springframework.web.reactive.function.BodyInserters.fromObject
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Component
-public class MenuHandler {
+public class MenuDescriptionHandler {
 
     private final MenuDescriptionRepository menuDescriptionRepository;
 
-    private final ItemProcessor itemProcessor;
-
     @Autowired
-    public MenuHandler(MenuDescriptionRepository menuDescriptionRepository,
-                       ItemProcessor itemProcessor) {
+    public MenuDescriptionHandler(MenuDescriptionRepository menuDescriptionRepository) {
         this.menuDescriptionRepository = menuDescriptionRepository;
-        this.itemProcessor = itemProcessor;
     }
 
-    public Mono<ServerResponse> getMenus(ServerRequest request) {
+    public Mono<ServerResponse> getMenuDescriptions(ServerRequest request) {
         return menuDescriptionRepository.findAll()
-                .map(menuDescription -> {
-                    ItemsValues itemValues = itemProcessor.process(menuDescription);
-                    return new MenuDto(menuDescription, itemValues);
-                })
                 .collectList()
                 .flatMap(data -> ok()
                         .body(fromObject(data)));
     }
 
-    public Mono<ServerResponse> getMenu(ServerRequest request) {
+    public Mono<ServerResponse> getMenuDescription(ServerRequest request) {
         String id = request.pathVariable("id");
         return menuDescriptionRepository.findById(id)
-                .map(menuDescription -> {
-                    ItemsValues itemValues = itemProcessor.process(menuDescription);
-                    return new MenuDto(menuDescription, itemValues);
-                })
                 .flatMap(data -> ok()
                         .body(fromObject(data)));
+    }
+
+    public Mono<ServerResponse> putMenuDescription(ServerRequest request) {
+        String id = request.pathVariable("id");
+        return request.bodyToMono(MenuDescriptionDto.class)
+                .map(menu -> new MenuDescriptionDto(id, menu.getItemsDto(), menu.getSalesDto(), menu.getIngredientsDto()))
+                .flatMap(menuDescriptionRepository::save)
+                .flatMap(saved -> ok()
+                        .body(fromObject(saved)));
+    }
+
+    public Mono<ServerResponse> postMenuDescription(ServerRequest request) {
+        return request.bodyToMono(MenuDescriptionDto.class)
+                .flatMap(menuDescriptionRepository::save)
+                .flatMap(saved -> ok()
+                        .body(fromObject(saved)));
     }
 
 }

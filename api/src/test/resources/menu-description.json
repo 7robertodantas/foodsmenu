@@ -1,0 +1,110 @@
+{
+  "id": "menu",
+  "items": [
+    {
+      "name": "X-Bacon",
+      "ingredients": [
+        "Bacon",
+        "Hamburguer",
+        "Cheese"
+      ],
+      "eligibleSalesCodes": [
+        "10off",
+        "3pay2hamburguer",
+        "3pay2cheese"
+      ]
+    },
+    {
+      "name": "X-Burguer",
+      "ingredients": [
+        "Hamburguer",
+        "Cheese"
+      ],
+      "eligibleSalesCodes": [
+        "10off",
+        "3pay2hamburguer",
+        "3pay2cheese"
+      ]
+    },
+    {
+      "name": "X-Egg",
+      "ingredients": [
+        "Egg",
+        "Hamburguer",
+        "Cheese"
+      ],
+      "eligibleSalesCodes": [
+        "10off",
+        "3pay2hamburguer",
+        "3pay2cheese"
+      ]
+    },
+    {
+      "name": "X-Egg-Bacon",
+      "ingredients": [
+        "Egg",
+        "Bacon",
+        "Hamburguer",
+        "Cheese"
+      ],
+      "eligibleSalesCodes": [
+        "10off",
+        "3pay2hamburguer",
+        "3pay2cheese"
+      ]
+    }
+  ],
+  "sales": {
+    "composition": [
+      {
+        "code": "10off",
+        "description": "10% OFF - Must have lettuce and not have bacon.",
+        "percentage": 0.1,
+        "shouldHave": [
+          "Lettuce"
+        ],
+        "shouldNotHave": [
+          "Bacon"
+        ]
+      }
+    ],
+    "quantity": [
+      {
+        "code": "3pay2hamburguer",
+        "description": "For each 3 hamburguers pay only 2. ",
+        "ingredient": "Hamburguer",
+        "forEachQuantityOf": 3,
+        "quantityThatWillBeFree": 1
+      },
+      {
+        "code": "3pay2cheese",
+        "description": "For each 3 cheese pay only 2. ",
+        "ingredient": "Cheese",
+        "forEachQuantityOf": 3,
+        "quantityThatWillBeFree": 1
+      }
+    ]
+  },
+  "ingredients": [
+    {
+      "name": "Lettuce",
+      "value": 0.4
+    },
+    {
+      "name": "Bacon",
+      "value": 2.0
+    },
+    {
+      "name": "Hamburguer",
+      "value": 3.0
+    },
+    {
+      "name": "Egg",
+      "value": 0.8
+    },
+    {
+      "name": "Cheese",
+      "value": 1.5
+    }
+  ]
+}
