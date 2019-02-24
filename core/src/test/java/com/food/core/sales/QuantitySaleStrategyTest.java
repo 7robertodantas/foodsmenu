@@ -29,24 +29,24 @@ class QuantitySaleStrategyTest {
     @DisplayName("Should get the correct discount")
     @ParameterizedTest(name = "{index} => For each group of {0}, {1} should be free. Given {2} with value of {3} then the expected discount is {4}")
     @MethodSource("ingredientQuantityProvider")
-    public void testApply(int forEachQuantityOf,
-                          int quantityThatWillBeFree,
-                          int howManyInOrder,
-                          double valueOfEach,
-                          double expectedDiscount) {
+    public void testApply(final int forEachQuantityOf,
+                          final int quantityThatWillBeFree,
+                          final int howManyInOrder,
+                          final double valueOfEach,
+                          final double expectedDiscount) {
 
 
-        List<String> elements = IntStream.range(0, howManyInOrder).boxed().map(i -> "Element").collect(toList());
-        Item item = new ItemImpl("Item", elements, asSet("test"));
+        final List<String> elements = IntStream.range(0, howManyInOrder).boxed().map(i -> "Element").collect(toList());
+        final Item item = new ItemImpl("Item", elements, asSet("test"));
 
-        String description = String.format("For each %s Ingredient pay only %s", forEachQuantityOf, forEachQuantityOf - quantityThatWillBeFree);
+        final String description = String.format("For each %s Ingredient pay only %s", forEachQuantityOf, forEachQuantityOf - quantityThatWillBeFree);
 
-        Map<String, Double> valuePerIngredient = new HashMap<>();
+        final Map<String, Double> valuePerIngredient = new HashMap<>();
         valuePerIngredient.put("Element", valueOfEach);
 
-        ItemContext itemContext = new ItemContextImpl(item, item.getElements().size() * valueOfEach, valuePerIngredient);
-        QuantitySaleStrategy strategy = new QuantitySaleStrategy("test", description, "Element", forEachQuantityOf, quantityThatWillBeFree);
-        Optional<Discount> discount = strategy.apply(itemContext);
+        final ItemContext itemContext = new ItemContextImpl(item, item.getElements().size() * valueOfEach, valuePerIngredient);
+        final QuantitySaleStrategy strategy = new QuantitySaleStrategy("test", description, "Element", forEachQuantityOf, quantityThatWillBeFree);
+        final Optional<Discount> discount = strategy.apply(itemContext);
 
         if (expectedDiscount > 0.0) {
             assertThat(discount).isPresent();
@@ -83,7 +83,9 @@ class QuantitySaleStrategyTest {
         );
     }
 
-    private static Stream<Arguments> ingredientQuantityArgument(int forEachQuantityOf, int quantityThatWillBeFree, double valueOfEach) {
+    private static Stream<Arguments> ingredientQuantityArgument(final int forEachQuantityOf,
+                                                                final int quantityThatWillBeFree,
+                                                                final double valueOfEach) {
         return Stream.of(
                 Arguments.of(forEachQuantityOf, quantityThatWillBeFree, 0, valueOfEach, 0.0), // zero quantity should return no discount
                 Arguments.of(forEachQuantityOf, quantityThatWillBeFree, forEachQuantityOf - 1, valueOfEach, 0.0), // less the quantity

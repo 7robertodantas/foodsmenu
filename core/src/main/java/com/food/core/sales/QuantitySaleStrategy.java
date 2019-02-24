@@ -24,7 +24,11 @@ public class QuantitySaleStrategy implements SaleStrategy {
     @Getter
     private final int quantityThatWillBeFree;
 
-    public QuantitySaleStrategy(String code, String description, String ingredient, int forEachQuantityOf, int quantityThatWillBeFree) {
+    public QuantitySaleStrategy(final String code,
+                                final String description,
+                                final String ingredient,
+                                final int forEachQuantityOf,
+                                final int quantityThatWillBeFree) {
         this.code = code;
         this.description = description;
         this.ingredient = ingredient;
@@ -36,7 +40,7 @@ public class QuantitySaleStrategy implements SaleStrategy {
     }
 
     @Override
-    public Optional<Discount> apply(ItemContext context) {
+    public Optional<Discount> apply(final ItemContext context) {
 
         long occurrences = context.getItem()
                 .getElements()

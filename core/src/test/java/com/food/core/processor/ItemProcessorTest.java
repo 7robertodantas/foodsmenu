@@ -12,20 +12,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static com.food.core.utils.CollectionUtils.asSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ItemProcessorTest {
 
     private Set<Element> elements;
-    
+
     private Map<String, Double> valuePerElement;
 
     private ItemProcessor itemProcessor;
@@ -46,20 +44,20 @@ class ItemProcessorTest {
     @Test
     @DisplayName("Should reject unknown ingredients")
     public void shouldRejectUnknownIngredient() {
-        Item item = new ItemImpl("X-Bacon", asList("Lettuce", "Rice", "Bacon"), emptySet()); // "Rice" is unknown
-        ItemsContext itemsContext = new ItemsContextImpl(emptySet(), emptySet(), singletonList(item));
+        final Item item = new ItemImpl("X-Bacon", asList("Lettuce", "Rice", "Bacon"), emptySet()); // "Rice" is unknown
+        final ItemsContext itemsContext = new ItemsContextImpl(emptySet(), emptySet(), singletonList(item));
         Assertions.assertThrows(IllegalStateException.class, () -> itemProcessor.process(itemsContext));
     }
 
     @Test
     @DisplayName("Should calculate price without com.food.core.sales strategies")
     public void shouldCalculatePriceWithoutSalesStrategies() {
-        Item itemEggBacon = new ItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"), emptySet());
-        Item itemEgg = new ItemImpl("X-Egg", asList("Lettuce", "Egg"), emptySet());
-        ItemsContext itemsContext = new ItemsContextImpl(elements, emptySet(), asList(itemEggBacon, itemEgg));
-        double orderCostWithoutDiscount = calculateCostPrice(itemsContext);
+        final Item itemEggBacon = new ItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"), emptySet());
+        final Item itemEgg = new ItemImpl("X-Egg", asList("Lettuce", "Egg"), emptySet());
+        final ItemsContext itemsContext = new ItemsContextImpl(elements, emptySet(), asList(itemEggBacon, itemEgg));
+        final double orderCostWithoutDiscount = calculateCostPrice(itemsContext);
 
-        ItemsValues itemsValues = itemProcessor.process(itemsContext);
+        final ItemsValues itemsValues = itemProcessor.process(itemsContext);
 
         assertThat(itemsValues.getCostPrice()).isEqualTo(orderCostWithoutDiscount);
         assertThat(itemsValues.getTotalPrice()).isEqualTo(orderCostWithoutDiscount);
@@ -90,11 +88,11 @@ class ItemProcessorTest {
             }
         };
 
-        Item itemEggBacon = new ItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"), asSet("10off"));
-        ItemsContext itemsContext = new ItemsContextImpl(elements, asSet(off10), singletonList(itemEggBacon));
-        double orderCostWithoutDiscount = calculateCostPrice(itemsContext);
+        final Item itemEggBacon = new ItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"), asSet("10off"));
+        final ItemsContext itemsContext = new ItemsContextImpl(elements, asSet(off10), singletonList(itemEggBacon));
+        final double orderCostWithoutDiscount = calculateCostPrice(itemsContext);
 
-        ItemsValues itemsValues = itemProcessor.process(itemsContext);
+        final ItemsValues itemsValues = itemProcessor.process(itemsContext);
 
         assertThat(itemsValues.getCostPrice()).isEqualTo(orderCostWithoutDiscount);
         assertThat(itemsValues.getTotalPrice()).isEqualTo(orderCostWithoutDiscount - (orderCostWithoutDiscount * percentage));
@@ -107,7 +105,7 @@ class ItemProcessorTest {
     @DisplayName("Should not apply discount if price is going to be negative")
     public void shouldNotApplyDiscountIfPriceIsGoingToBeNegative() {
         final double percentage = 1.2;
-        SaleStrategy off120percent = new SaleStrategy() {
+        final SaleStrategy off120percent = new SaleStrategy() {
 
             @Override
             public String getCode() {
@@ -125,11 +123,11 @@ class ItemProcessorTest {
             }
         };
 
-        Item itemEggBacon = new ItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"), asSet("120off"));
-        ItemsContext itemsContext = new ItemsContextImpl(elements, new HashSet<>(singletonList(off120percent)), singletonList(itemEggBacon));
+        final Item itemEggBacon = new ItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"), asSet("120off"));
+        final ItemsContext itemsContext = new ItemsContextImpl(elements, new HashSet<>(singletonList(off120percent)), singletonList(itemEggBacon));
         double orderCostWithoutDiscount = calculateCostPrice(itemsContext);
 
-        ItemsValues itemsValues = itemProcessor.process(itemsContext);
+        final ItemsValues itemsValues = itemProcessor.process(itemsContext);
 
         assertThat(itemsValues.getCostPrice()).isEqualTo(orderCostWithoutDiscount);
         assertThat(itemsValues.getTotalPrice()).isEqualTo(orderCostWithoutDiscount);
@@ -142,7 +140,7 @@ class ItemProcessorTest {
     @DisplayName("Should apply multiples discounts until price remains positive")
     public void shouldApplyMultiplesDiscountsUntilPriceRemainsPositive() {
 
-        SaleStrategy discountWholeValueMinusOne = new SaleStrategy() {
+        final SaleStrategy discountWholeValueMinusOne = new SaleStrategy() {
 
             @Override
             public String getCode() {
@@ -160,7 +158,7 @@ class ItemProcessorTest {
             }
         };
 
-        SaleStrategy discountWholeValueMinusTwo = new SaleStrategy() {
+        final SaleStrategy discountWholeValueMinusTwo = new SaleStrategy() {
 
             @Override
             public String getCode() {
@@ -178,11 +176,11 @@ class ItemProcessorTest {
             }
         };
 
-        Item itemEggBacon = new ItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"), asSet("wholePriceDiscount1", "wholePriceDiscount2"));
-        ItemsContext itemsContext = new ItemsContextImpl(elements, new HashSet<>(asList(discountWholeValueMinusOne, discountWholeValueMinusTwo)), singletonList(itemEggBacon));
-        double orderCostWithoutDiscount = calculateCostPrice(itemsContext);
+        final Item itemEggBacon = new ItemImpl("X-Egg-Bacon", asList("Lettuce", "Egg", "Bacon"), asSet("wholePriceDiscount1", "wholePriceDiscount2"));
+        final ItemsContext itemsContext = new ItemsContextImpl(elements, new HashSet<>(asList(discountWholeValueMinusOne, discountWholeValueMinusTwo)), singletonList(itemEggBacon));
+        final double orderCostWithoutDiscount = calculateCostPrice(itemsContext);
 
-        ItemsValues itemsValues = itemProcessor.process(itemsContext);
+        final ItemsValues itemsValues = itemProcessor.process(itemsContext);
 
         //FIXME
         //Expecting:
@@ -197,7 +195,7 @@ class ItemProcessorTest {
         );
     }
 
-    private double calculateCostPrice(ItemsContext itemsContext) {
+    private double calculateCostPrice(final ItemsContext itemsContext) {
         return itemsContext.getItems()
                 .stream()
                 .map(Item::getElements)
@@ -206,7 +204,7 @@ class ItemProcessorTest {
                 .orElse(0.0d);
     }
 
-    private double calculateCostPrice(List<String> ingredient) {
+    private double calculateCostPrice(final List<String> ingredient) {
         return ingredient.stream()
                 .map(valuePerElement::get)
                 .reduce(Double::sum)

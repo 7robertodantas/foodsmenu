@@ -31,7 +31,11 @@ public class CompositionSaleStrategy implements SaleStrategy {
     private final Predicate<Item> doesnContainsSomeIngredients;
     private final Predicate<Item> shouldApplyLightSale;
 
-    public CompositionSaleStrategy(String code, String description, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
+    public CompositionSaleStrategy(final String code,
+                                   final String description,
+                                   final double percentage,
+                                   final Set<String> shouldHave,
+                                   final Set<String> shouldNotHave) {
         this.code = code;
         this.description = description;
         this.percentage = percentage;
@@ -50,7 +54,7 @@ public class CompositionSaleStrategy implements SaleStrategy {
     }
 
     @Override
-    public Optional<Discount> apply(ItemContext context) {
+    public Optional<Discount> apply(final ItemContext context) {
         if (shouldApplyLightSale.test(context.getItem())) {
             return Optional.of(new DiscountImpl(description, context.getItemCostValue() * percentage));
         }

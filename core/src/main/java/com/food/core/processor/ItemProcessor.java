@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.*;
 @AllArgsConstructor
 public class ItemProcessor {
 
-    public ItemsValues process(ItemsContext itemsContext) {
+    public ItemsValues process(final ItemsContext itemsContext) {
 
         final Map<String, Double> valuePerElement = itemsContext.getElements()
                 .stream()
@@ -53,7 +53,9 @@ public class ItemProcessor {
         return new ItemsValuesImpl(itemValues, costValue, totalValue);
     }
 
-    private ItemValue processItem(final Item item, final Set<SaleStrategy> strategies, final Map<String, Double> valuePerElement) {
+    private ItemValue processItem(final Item item,
+                                  final Set<SaleStrategy> strategies,
+                                  final Map<String, Double> valuePerElement) {
         final double itemCostValue = calculateCostValue(item, valuePerElement);
         final ItemContext context = new ItemContextImpl(item, itemCostValue, valuePerElement);
         final Stack<Discount> appliedDiscounts = new Stack<>();
@@ -87,7 +89,8 @@ public class ItemProcessor {
         return processItem(context, newCurrentValue, appliedDiscounts, strategies);
     }
 
-    private double calculateCostValue(final Item item, final Map<String, Double> valuePerElement){
+    private double calculateCostValue(final Item item,
+                                      final Map<String, Double> valuePerElement){
         return item.getElements()
                 .stream()
                 .map(valuePerElement::get)

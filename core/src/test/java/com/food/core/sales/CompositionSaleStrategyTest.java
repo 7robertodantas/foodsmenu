@@ -32,16 +32,16 @@ class CompositionSaleStrategyTest {
     @DisplayName("Should get the correct discount")
     @ParameterizedTest(name = "{index} => For an item having {1} and not having {2}, given {0} with net price of {3} should expect discount of {5}")
     @MethodSource("ingredientCompositionProvider")
-    public void testApply(Item item,
-                          Set<String> shouldHave,
-                          Set<String> shouldNotHave,
-                          double itemCostValue,
-                          double percentage,
-                          double expectedDiscount) {
+    public void testApply(final Item item,
+                          final Set<String> shouldHave,
+                          final Set<String> shouldNotHave,
+                          final double itemCostValue,
+                          final double percentage,
+                          final double expectedDiscount) {
 
 
-        CompositionSaleStrategy strategy = new CompositionSaleStrategy("test", "sale strategy", percentage, shouldHave, shouldNotHave);
-        Optional<Discount> discount = strategy.apply(new ItemContextImpl(item, itemCostValue, pricePerIngredient));
+        final CompositionSaleStrategy strategy = new CompositionSaleStrategy("test", "sale strategy", percentage, shouldHave, shouldNotHave);
+        final Optional<Discount> discount = strategy.apply(new ItemContextImpl(item, itemCostValue, pricePerIngredient));
 
         if (expectedDiscount > 0.0) {
             assertThat(discount).isPresent();
@@ -54,15 +54,15 @@ class CompositionSaleStrategyTest {
     private static Stream<Arguments> ingredientCompositionProvider() {
         final double percentage = 0.1;
         return Stream.of(
-            // order items, should have, should not have,
-            Arguments.of(new ItemImpl("X-Bacon", singletonList("Bacon"), asSet("test")), emptySet(), emptySet(), 10, percentage, 0.0), // no elements expected should return no discount
-            Arguments.of(new ItemImpl("X-Bacon", singletonList("Bacon"), asSet("test")), setOf("Bacon"), emptySet(), 10, percentage, 10 * percentage), // should have one element
-            Arguments.of(new ItemImpl("X-Bacon", singletonList("Bacon"), asSet("test")), emptySet(), setOf("Bacon"), 10, percentage, 0.0), // should not have one element
-            Arguments.of(new ItemImpl("X-Bacon", singletonList("Bread"), asSet("test")), emptySet(), setOf("Bacon"), 10, percentage, 10 * percentage) // should not have one element
+                // order items, should have, should not have,
+                Arguments.of(new ItemImpl("X-Bacon", singletonList("Bacon"), asSet("test")), emptySet(), emptySet(), 10, percentage, 0.0), // no elements expected should return no discount
+                Arguments.of(new ItemImpl("X-Bacon", singletonList("Bacon"), asSet("test")), setOf("Bacon"), emptySet(), 10, percentage, 10 * percentage), // should have one element
+                Arguments.of(new ItemImpl("X-Bacon", singletonList("Bacon"), asSet("test")), emptySet(), setOf("Bacon"), 10, percentage, 0.0), // should not have one element
+                Arguments.of(new ItemImpl("X-Bacon", singletonList("Bread"), asSet("test")), emptySet(), setOf("Bacon"), 10, percentage, 10 * percentage) // should not have one element
         );
     }
 
-    private static Set<String> setOf(String ... values) {
+    private static Set<String> setOf(final String... values) {
         return Arrays.stream(values).collect(toSet());
     }
 

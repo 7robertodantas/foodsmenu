@@ -12,6 +12,6 @@ public interface SaleStrategy {
 
     String getDescription();
 
-    Optional<Discount> apply(ItemContext context);
+    Optional<Discount> apply(final ItemContext context);
 
 }
