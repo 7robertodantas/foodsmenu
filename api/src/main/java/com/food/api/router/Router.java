@@ -1,6 +1,5 @@
 package com.food.api.router;
 
-import com.food.api.handler.IngredientHandler;
 import com.food.api.handler.MenuDescriptionHandler;
 import com.food.api.handler.MenuHandler;
 import org.springframework.context.annotation.Bean;
@@ -27,16 +26,6 @@ public class Router {
                 .GET("/menus/{id}/descriptions", menuDescriptionHandler::getMenuDescription)
                 .PUT("/menus/{id}/descriptions", menuDescriptionHandler::putMenuDescription)
                 .POST("/menus/descriptions", menuDescriptionHandler::postMenuDescription)
-                .build();
-    }
-
-    @Bean
-    public RouterFunction<ServerResponse> ingredientRouter(IngredientHandler ingredientHandler) {
-        return RouterFunctions.route()
-                .GET("/ingredients", ingredientHandler::getIngredients)
-                .PUT("/ingredients/{name}", ingredientHandler::putIngredient)
-                .DELETE("/ingredients/{name}", ingredientHandler::deleteIngredient)
-                .POST("/ingredients", ingredientHandler::postIngredient)
                 .build();
     }
 
