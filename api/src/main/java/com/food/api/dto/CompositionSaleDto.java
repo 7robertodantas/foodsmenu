@@ -27,7 +27,7 @@ public class CompositionSaleDto implements SaleStrategy {
     @Getter
     private final Set<String> shouldNotHave;
 
-    @ConstructorProperties({"description", "percentage", "shouldHave", "shouldNotHave"})
+    @ConstructorProperties({"code", "description", "percentage", "shouldHave", "shouldNotHave"})
     public CompositionSaleDto(String code, String description, double percentage, Set<String> shouldHave, Set<String> shouldNotHave) {
         this.code = code;
         this.description = description;

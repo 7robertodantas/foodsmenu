@@ -1,5 +1,6 @@
 package com.food.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.food.core.facade.Discount;
 import com.food.core.facade.ItemContext;
 import com.food.core.sales.QuantitySaleStrategy;
@@ -12,18 +13,23 @@ import java.util.Optional;
 public class QuantitySaleDto implements SaleStrategy {
 
     @Getter
+    @JsonProperty("code")
     private final String code;
 
     @Getter
+    @JsonProperty("description")
     private final String description;
 
     @Getter
+    @JsonProperty("ingredient")
     private final String ingredient;
 
     @Getter
+    @JsonProperty("forEachQuantityOf")
     private final int forEachQuantityOf;
 
     @Getter
+    @JsonProperty("quantityThatWillBeFree")
     private final int quantityThatWillBeFree;
 
     @ConstructorProperties({"code", "description", "ingredient", "forEachQuantityOf", "quantityThatWillBeFree"})

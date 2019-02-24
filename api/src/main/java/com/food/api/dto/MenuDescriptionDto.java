@@ -6,7 +6,10 @@ import com.food.core.facade.Element;
 import com.food.core.facade.Item;
 import com.food.core.facade.ItemsContext;
 import com.food.core.sales.SaleStrategy;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Transient;
 
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
@@ -17,23 +20,21 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 
+@Data
+@NoArgsConstructor
 public class MenuDescriptionDto implements ItemsContext {
 
-    @Getter
     @JsonProperty("id")
-    private final String id;
+    private String id;
 
-    @Getter
     @JsonProperty("items")
-    private final List<ItemDto> itemsDto;
+    private List<ItemDto> itemsDto;
 
-    @Getter
     @JsonProperty("sales")
-    private final SalesDto salesDto;
+    private SalesDto salesDto;
 
-    @Getter
     @JsonProperty("ingredients")
-    private final List<IngredientDto> ingredientsDto;
+    private List<IngredientDto> ingredientsDto;
 
     @ConstructorProperties({"id", "items", "sales", "ingredients"})
     public MenuDescriptionDto(String id, List<ItemDto> items, SalesDto sales, List<IngredientDto> ingredients) {
@@ -67,16 +68,19 @@ public class MenuDescriptionDto implements ItemsContext {
     }
 
     @JsonIgnore
+    @Transient
     public Set<SaleStrategy> getStrategies(){
         return salesDto.getStrategies();
     }
 
     @JsonIgnore
+    @Transient
     public List<Item> getItems() {
         return new ArrayList<>(itemsDto);
     }
 
     @JsonIgnore
+    @Transient
     public Set<Element> getElements() {
         return new HashSet<>(ingredientsDto);
     }

@@ -1,6 +1,7 @@
 package com.food.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.food.core.facade.Item;
 import com.food.core.facade.ItemValue;
 import lombok.Getter;
@@ -12,16 +13,19 @@ import java.util.Set;
 public class MenuItemDto implements Item {
 
     @Getter
+    @JsonProperty("name")
     private final String name;
 
     @Getter
+    @JsonProperty("ingredients")
     private final List<String> ingredients;
 
     @Getter
+    @JsonProperty("price")
     private final double price;
 
-    @JsonIgnore
     @Getter
+    @JsonIgnore
     private final Set<String> eligibleSalesCodes;
 
     @ConstructorProperties({"name", "ingredients", "price", "eligibleSalesCodes"})

@@ -10,8 +10,8 @@
       ],
       "eligibleSalesCodes": [
         "10off",
-        "3pay2hamburguer",
-        "3pay2cheese"
+        "hamburguer3pay2",
+        "cheese3pay2"
       ]
     },
     {
@@ -22,8 +22,8 @@
       ],
       "eligibleSalesCodes": [
         "10off",
-        "3pay2hamburguer",
-        "3pay2cheese"
+        "hamburguer3pay2",
+        "cheese3pay2"
       ]
     },
     {
@@ -35,8 +35,8 @@
       ],
       "eligibleSalesCodes": [
         "10off",
-        "3pay2hamburguer",
-        "3pay2cheese"
+        "hamburguer3pay2",
+        "cheese3pay2"
       ]
     },
     {
@@ -49,8 +49,8 @@
       ],
       "eligibleSalesCodes": [
         "10off",
-        "3pay2hamburguer",
-        "3pay2cheese"
+        "hamburguer3pay2",
+        "cheese3pay2"
       ]
     }
   ],
@@ -70,14 +70,14 @@
     ],
     "quantity": [
       {
-        "code": "3pay2hamburguer",
+        "code": "hamburguer3pay2",
         "description": "For each 3 hamburguers pay only 2. ",
         "ingredient": "Hamburguer",
         "forEachQuantityOf": 3,
         "quantityThatWillBeFree": 1
       },
       {
-        "code": "3pay2cheese",
+        "code": "cheese3pay2",
         "description": "For each 3 cheese pay only 2. ",
         "ingredient": "Cheese",
         "forEachQuantityOf": 3,
